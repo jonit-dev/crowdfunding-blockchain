@@ -15,3 +15,13 @@ METAMASK_MNEMONIC="your seed phrase here"
 METAMASK_ACCOUNT="your account here"
 
 ```
+
+### contracts folder structure
+
+- must be:
+
+```
+./contracts/contractName
+  contractName.sol
+  build (will be generated after compilation)
+```

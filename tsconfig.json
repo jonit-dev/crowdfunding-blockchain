@@ -68,6 +68,7 @@
     /* Advanced Options */
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
-    "typeRoots": ["src/@types", "node_modules/@types"]
+    "typeRoots": ["src/@types", "node_modules/@types"],
+    "downlevelIteration": true
   }
 }
