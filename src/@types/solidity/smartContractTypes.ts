@@ -1,7 +1,10 @@
-export interface ICompiledSmartContract {
-  errors: Error[];
-  sources: Sources;
-  contracts: Contracts;
+export interface IContractDeployOptions {
+  contractName: string;
+  contractArgs: any[];
+}
+
+export interface ICompileOptions {
+  forceRecompile: boolean;
 }
 
 export interface Contracts {

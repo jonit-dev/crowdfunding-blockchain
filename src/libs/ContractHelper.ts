@@ -1,12 +1,15 @@
 import fs from "fs-extra";
 import path from "path";
 import solc from "solc";
-import { IContractData } from "../@types/solidity/smartContractTypes";
+import {
+  ICompileOptions,
+  IContractData,
+} from "../@types/solidity/smartContractTypes";
 
 export class ContractHelper {
   public compile(
     contractName: string,
-    alwaysRecompile: boolean = false
+    compileOptions: ICompileOptions
   ): Map<string, IContractData> {
     const buildPath = path.resolve(
       __dirname,
@@ -18,7 +21,7 @@ export class ContractHelper {
     );
 
     // skip if build folder exists
-    if (fs.existsSync(buildPath) && !alwaysRecompile) {
+    if (fs.existsSync(buildPath) && !compileOptions.forceRecompile) {
       console.log(
         "✅  Found build folder, skipping compilation... (remove it to force recompilation)"
       );
@@ -91,5 +94,3 @@ export class ContractHelper {
     return contractsData;
   }
 }
-
-export const contractHelper = new ContractHelper();

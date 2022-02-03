@@ -1,13 +1,12 @@
 import ganache from "ganache-cli";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
-import { Evm } from "../@types/solidity/smartContractTypes";
+import {
+  Evm,
+  ICompileOptions,
+  IContractDeployOptions,
+} from "../@types/solidity/smartContractTypes";
 import { ContractHelper } from "./ContractHelper";
-
-interface IContractDeployOptions {
-  contractName: string;
-  contractArgs: any[];
-}
 
 class LocalNetworkHelper {
   public testingAccounts: Promise<string[]>;
@@ -22,16 +21,22 @@ class LocalNetworkHelper {
   public async compileAndDeploy(
     contractToCompile: string,
     contractsToDeploy: IContractDeployOptions[],
-    args: any[] = []
-  ): Promise<Contract[]> {
+    args: any[] = [],
+    compileOptions: ICompileOptions = {
+      forceRecompile: false,
+    }
+  ): Promise<Map<string, Contract>> {
     // get all result entries
-    const compiledContracts = this.contractHelper.compile(contractToCompile);
+    const compiledContracts = this.contractHelper.compile(
+      contractToCompile,
+      compileOptions
+    );
 
-    const deployedContracts: Contract[] = [];
+    const deployedContractsOutput = new Map<string, Contract>();
 
     for (const contractToDeploy of contractsToDeploy) {
       console.log(
-        `🚢 Deploying contract ${contractToDeploy.contractName} to Local Network...`
+        `⛵ Deploying contract ${contractToDeploy.contractName} to Local Network...`
       );
 
       const { abi, evm } = compiledContracts.get(
@@ -46,10 +51,10 @@ class LocalNetworkHelper {
 
       const contract = await this.deploy(abi, evm, args);
 
-      deployedContracts.push(contract);
+      deployedContractsOutput.set(contractToDeploy.contractName, contract);
     }
 
-    return deployedContracts;
+    return deployedContractsOutput;
   }
 
   public async getTestingAccount(): Promise<string> {
