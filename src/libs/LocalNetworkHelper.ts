@@ -71,6 +71,16 @@ class LocalNetworkHelper {
     return accounts[0];
   }
 
+  public async getContractFromAddress(
+    contractABI: any,
+    contractAddress: string
+  ): Promise<Contract> {
+    return new this.web3.eth.Contract(
+      contractABI,
+      contractAddress
+    ) as unknown as Contract;
+  }
+
   private async deploy(
     abi: any,
     evm: Evm,
