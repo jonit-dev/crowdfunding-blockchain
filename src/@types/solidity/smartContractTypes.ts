@@ -1,6 +1,6 @@
 export interface IContractDeployOptions {
   contractName: string;
-  contractArgs: any[];
+  contractArgs?: any[];
 }
 
 export interface ICompileOptions {
