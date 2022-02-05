@@ -4,9 +4,15 @@ import { Contract } from "web3-eth-contract";
 import {
   Evm,
   ICompileOptions,
+  IContractData,
   IContractDeployOptions,
 } from "../@types/solidity/smartContractTypes";
 import { ContractHelper } from "./ContractHelper";
+
+interface ICompileAndDeployOutput {
+  compiledContracts: Map<string, IContractData>;
+  deployedContracts: Map<string, Contract>;
+}
 
 class LocalNetworkHelper {
   public testingAccounts: Promise<string[]>;
@@ -25,7 +31,7 @@ class LocalNetworkHelper {
     compileOptions: ICompileOptions = {
       forceRecompile: false,
     }
-  ): Promise<Map<string, Contract>> {
+  ): Promise<ICompileAndDeployOutput> {
     // get all result entries
     const compiledContracts = this.contractHelper.compile(
       contractToCompile,
@@ -54,7 +60,10 @@ class LocalNetworkHelper {
       deployedContractsOutput.set(contractToDeploy.contractName, contract);
     }
 
-    return deployedContractsOutput;
+    return {
+      deployedContracts: deployedContractsOutput,
+      compiledContracts: compiledContracts,
+    };
   }
 
   public async getTestingAccount(): Promise<string> {
