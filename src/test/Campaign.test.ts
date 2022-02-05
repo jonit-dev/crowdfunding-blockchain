@@ -63,8 +63,6 @@ describe("Campaign.sol", () => {
       .approvers(testingAccounts[1])
       .call();
 
-    console.log("isContributor", isContributor);
-
     assert(isContributor);
   });
 
@@ -82,5 +80,20 @@ describe("Campaign.sol", () => {
         value: "0",
       })
     );
+  });
+
+  it("allows a manager to make a payment request", async () => {
+    const managerAddress = await campaign.methods.manager().call();
+
+    await campaign.methods
+      .createRequest("Money for alcohol", "100", managerAddress)
+      .send({
+        from: managerAddress,
+        gas: "1000000",
+      });
+
+    const request = await campaign.methods.requests(0).call();
+
+    assert.ok(request.description === "Money for alcohol");
   });
 });
