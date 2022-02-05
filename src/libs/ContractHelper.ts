@@ -45,7 +45,7 @@ export class ContractHelper {
 
     const contractFullName = `${contractName}.sol`;
 
-    console.log(`🔨 Building contract source for ${contractName}...`);
+    console.log(`🔨 Compiling contract source for ${contractName}...`);
 
     const contractPath = path.resolve(
       __dirname,
