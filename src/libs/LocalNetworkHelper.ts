@@ -17,7 +17,7 @@ interface ICompileAndDeployOutput {
 class LocalNetworkHelper {
   public testingAccounts: Promise<string[]>;
   private contractHelper: ContractHelper;
-  private web3: Web3 = new Web3(ganache.provider());
+  public web3: Web3 = new Web3(ganache.provider());
 
   constructor() {
     this.contractHelper = new ContractHelper();
@@ -41,10 +41,6 @@ class LocalNetworkHelper {
     const deployedContractsOutput = new Map<string, Contract>();
 
     for (const contractToDeploy of contractsToDeploy) {
-      console.log(
-        `⛵ Deploying contract ${contractToDeploy.contractName} to Local Network...`
-      );
-
       const { abi, evm } = compiledContracts.get(
         contractToDeploy.contractName
       )!;

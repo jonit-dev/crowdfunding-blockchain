@@ -16,16 +16,8 @@ export class ContractHelper {
       `../contracts/${contractName}/build`
     );
 
-    console.log(
-      "🔎 Searching for contract source files to avoid re-compiling..."
-    );
-
     // skip if build folder exists
     if (fs.existsSync(buildPath) && !compileOptions.forceRecompile) {
-      console.log(
-        "✅  Found build folder, skipping compilation... (remove it to force recompilation)"
-      );
-
       const contractsData = new Map<string, IContractData>();
 
       // get all files in build folder
@@ -44,8 +36,6 @@ export class ContractHelper {
     }
 
     const contractFullName = `${contractName}.sol`;
-
-    console.log(`🔨 Compiling contract source for ${contractName}...`);
 
     const contractPath = path.resolve(
       __dirname,

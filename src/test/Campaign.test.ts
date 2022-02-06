@@ -1,11 +1,15 @@
 import assert from "assert";
+import web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import { localNetworkHelper } from "../libs/LocalNetworkHelper";
 
 let campaignFactory: Contract;
 let campaign: Contract;
+let testingAccounts: string[];
 
-before(async () => {
+beforeEach(async () => {
+  testingAccounts = await localNetworkHelper.testingAccounts;
+
   // deploy the contract
   // first argument "Campaign" refers to Campaign.sol, which has 2 different contracts inside: Campaign and CampaignFactory.
   // We use the CampaignFactory to save gas costs (the user will be in charge of paying the gas for deploying every new Campaign contract)
@@ -96,4 +100,58 @@ describe("Campaign.sol", () => {
 
     assert.ok(request.description === "Money for alcohol");
   });
+
+  it("should increase smart contract balance after a contribution is given", async () => {
+    await campaign.methods.contribute().send({
+      from: await localNetworkHelper.getTestingAccount(),
+      value: web3.utils.toWei("5", "ether"),
+    });
+
+    const balance = await campaign.methods.getTotalContributionsWei().call();
+
+    assert.ok(balance === web3.utils.toWei("5", "ether"));
+  });
+
+  it("processes requests", async () => {
+    const testingAccount = await localNetworkHelper.getTestingAccount();
+
+    await campaign.methods.contribute().send({
+      from: testingAccount,
+      value: web3.utils.toWei("10", "ether"),
+    });
+
+    // register initial account 1 balance
+    const initialRecipientBalance = await parseBalanceToETH(testingAccounts[1]);
+
+    await campaign.methods
+      .createRequest(
+        "A new request",
+        web3.utils.toWei("5", "ether"),
+        testingAccounts[1]
+      )
+      .send({
+        from: testingAccount,
+        gas: "1000000",
+      });
+
+    await campaign.methods.approveRequest(0).send({
+      from: testingAccount,
+      gas: "1000000",
+    });
+
+    await campaign.methods.finalizeRequest(0).send({
+      from: testingAccount,
+      gas: "1000000",
+    });
+
+    const finalRecipientBalance = await parseBalanceToETH(testingAccounts[1]);
+    // if our final balance is higher than our initial, then the request was processed successfully
+    assert.ok(finalRecipientBalance > initialRecipientBalance);
+  });
 });
+
+const parseBalanceToETH = async (account: string): Promise<number> => {
+  let balance = await localNetworkHelper.web3.eth.getBalance(account);
+  balance = web3.utils.fromWei(balance, "ether");
+  return parseFloat(balance);
+};

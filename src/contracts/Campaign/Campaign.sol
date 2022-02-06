@@ -64,10 +64,11 @@ contract Campaign {
         // get request information
         Request storage request = requests[requestIndex];
 
+        require(request.approvalCount > (approversCount / 2));
         require(!request.complete);
 
+        payable(request.recipient).transfer(request.value);
         request.complete = true;
-
     }
 
     function approveRequest(uint requestIndex) public {
@@ -89,6 +90,10 @@ contract Campaign {
     modifier restrictedToManager() {
         require(msg.sender == manager);
         _;
+    }
+
+    function getTotalContributionsWei() public view returns (uint) {
+        return address(this).balance;
     }
 
 
