@@ -27,7 +27,6 @@ class LocalNetworkHelper {
   public async compileAndDeploy(
     contractToCompile: string,
     contractsToDeploy: IContractDeployOptions[],
-    args: any[] = [],
     compileOptions: ICompileOptions = {
       forceRecompile: false,
     }
@@ -51,7 +50,11 @@ class LocalNetworkHelper {
         );
       }
 
-      const contract = await this.deploy(abi, evm, args);
+      const contract = await this.deploy(
+        abi,
+        evm,
+        contractToDeploy.contractArgs
+      );
 
       deployedContractsOutput.set(contractToDeploy.contractName, contract);
     }

@@ -37,7 +37,6 @@ export class TestNetworkHelper {
   public async compileAndDeploy(
     contractToCompile: string,
     contractsToDeploy: IContractDeployOptions[],
-    args: any[] = [],
     compileOptions: ICompileOptions = {
       forceRecompile: false,
     }
@@ -65,7 +64,11 @@ export class TestNetworkHelper {
         );
       }
 
-      const contract = await this.deploy(abi, evm, args);
+      const contract = await this.deploy(
+        abi,
+        evm,
+        contractToDeploy.contractArgs
+      );
 
       deployedContractsOutput.set(contractToDeploy.contractName, contract);
     }

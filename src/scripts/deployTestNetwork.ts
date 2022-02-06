@@ -10,7 +10,10 @@ import { TestNetworkHelper } from "../libs/TestNetworkHelper";
       {
         contractName: "CampaignFactory",
       },
-    ]
+    ],
+    {
+      forceRecompile: true,
+    }
   );
 
   const campaignFactory = deployedContracts.get("CampaignFactory")!;
