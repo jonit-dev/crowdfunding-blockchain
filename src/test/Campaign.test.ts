@@ -122,7 +122,6 @@ describe("Campaign.sol", () => {
       value: web3.utils.toWei("10", "ether"),
     });
 
-    // register initial account 1 balance
     const initialRecipientBalance = await parseBalanceToETH(testingAccounts[1]);
 
     await campaign.methods

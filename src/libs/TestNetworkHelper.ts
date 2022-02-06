@@ -16,11 +16,12 @@ export class TestNetworkHelper {
   private provider: HDWalletProvider;
   private endpoint: string;
   private contractHelper: ContractHelper;
+  private testNetwork: string;
 
   constructor(testNetwork: TestNetwork) {
+    this.testNetwork = testNetwork;
     this.endpoint = testNetworkEndpoints[testNetwork]!;
-    console.log(appEnv.metamask.mnemonic);
-    console.log(this.endpoint);
+
     this.provider = new HDWalletProvider(
       appEnv.metamask.mnemonic!,
       this.endpoint
@@ -29,7 +30,7 @@ export class TestNetworkHelper {
     this.contractHelper = new ContractHelper();
   }
 
-  private async getAccounts() {
+  public async getTestingAccounts() {
     return this.web3.eth.getAccounts();
   }
 
@@ -51,7 +52,7 @@ export class TestNetworkHelper {
 
     for (const contractToDeploy of contractsToDeploy) {
       console.log(
-        `🚢 Deploying contract ${contractToDeploy.contractName} to TEST Network...`
+        `🚢 Deploying contract ${contractToDeploy.contractName} to Test Network(${this.testNetwork})...`
       );
 
       const { abi, evm } = compiledContracts.get(
@@ -80,7 +81,7 @@ export class TestNetworkHelper {
     args: any[] = [],
     gas = 2000000
   ): Promise<Contract> {
-    const accounts = await this.getAccounts();
+    const accounts = await this.getTestingAccounts();
     console.log("Deploying to test network from account: ", accounts[0]);
 
     const result = await new this.web3.eth.Contract(abi)

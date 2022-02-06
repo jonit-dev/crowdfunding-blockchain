@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "yarn install && ts-node-dev --ignore-watch ./node_modules --transpile-only --respawn -r dotenv/config ./src/server.ts",
     "build": "tsc -p .",
-    "test": "mocha -r ts-node/register ./src/test/**/*.test.ts"
+    "test": "mocha -r ts-node/register ./src/test/**/*.test.ts",
+    "deploy:test:rinkeby": "ts-node-dev --ignore-watch ./node_modules --transpile-only --respawn -r dotenv/config ./src/scripts/deployTestNetwork.ts"
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^2.0.0",
