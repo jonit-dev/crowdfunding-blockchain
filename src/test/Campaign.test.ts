@@ -13,6 +13,8 @@ beforeEach(async () => {
   // deploy the contract
   // first argument "Campaign" refers to Campaign.sol, which has 2 different contracts inside: Campaign and CampaignFactory.
   // We use the CampaignFactory to save gas costs (the user will be in charge of paying the gas for deploying every new Campaign contract)
+
+  //! We're not recompiling everytime (forceRecompile = false), so if you change the contract you must delete the build folder for it to compile again!
   const { compiledContracts, deployedContracts } =
     await localNetworkHelper.compileAndDeploy("Campaign", [
       {
